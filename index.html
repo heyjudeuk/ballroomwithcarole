@@ -29,12 +29,8 @@
   />
   <meta name="twitter:image" content="https://ballroomwithcarole.co.uk/images/hero.webp" />
   <meta name="twitter:image:alt" content="Vintage-style illustration of a ballroom dancing couple" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
-    rel="stylesheet"
-  />
+  <link rel="preload" href="fonts/cormorant-garamond-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="style.css" />
   <script type="application/ld+json">
     {
@@ -119,7 +115,13 @@
 
         <div class="hero-art" aria-hidden="true">
           <div class="hero-art-frame">
-<img src="images/hero.webp" alt="Vintage-style illustration of a ballroom dancing couple" />
+            <img
+              src="images/hero.webp"
+              srcset="images/hero-300.webp 300w, images/hero-600.webp 600w, images/hero.webp 900w"
+              sizes="(max-width: 920px) calc(100vw - 2rem), 40vw"
+              alt="Vintage-style illustration of a ballroom dancing couple"
+              fetchpriority="high"
+            />
           </div>
         </div>
       </div>
@@ -144,7 +146,11 @@
             <img
               class="intro-image-art"
               src="images/tango.webp"
+              srcset="images/tango-300.webp 300w, images/tango-600.webp 600w, images/tango.webp 900w"
+              sizes="(max-width: 700px) calc(100vw - 4rem), 250px"
               alt="Vintage-style tango dancers illustration"
+              loading="lazy"
+              decoding="async"
             />
           </div>
         </div>
@@ -173,7 +179,14 @@
     <section id="about" class="about section section-tint">
 <div class="container two-column about-grid">
   <div class="about-image">
-    <img src="images/carole_hellewell.webp" alt="Carole Hellewell" />
+    <img
+      src="images/carole_hellewell.webp"
+      srcset="images/carole_hellewell-300.webp 300w, images/carole_hellewell-600.webp 600w, images/carole_hellewell.webp 900w"
+      sizes="(max-width: 920px) calc(100vw - 2rem), 36vw"
+      alt="Carole Hellewell"
+      loading="lazy"
+      decoding="async"
+    />
   </div>
 
   <div class="about-text">
@@ -212,7 +225,11 @@
               <img
                 class="classes-image-art"
                 src="images/dancing-couple.webp"
+                srcset="images/dancing-couple-300.webp 300w, images/dancing-couple-600.webp 600w, images/dancing-couple.webp 900w"
+                sizes="(max-width: 700px) calc(100vw - 4rem), 320px"
                 alt="Vintage-style dancing couple illustration"
+                loading="lazy"
+                decoding="async"
               />
             </div>
           </div>
@@ -332,7 +349,11 @@
                 <img
                   class="private-image-art"
                   src="images/jive.webp"
+                  srcset="images/jive-300.webp 300w, images/jive-600.webp 600w, images/jive.webp 900w"
+                  sizes="(max-width: 700px) calc(100vw - 4rem), 300px"
                   alt="Vintage-style jive dancers illustration"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
             </div>
@@ -359,7 +380,11 @@
                 <img
                   class="private-image-art"
                   src="images/wedding.webp"
+                  srcset="images/wedding-300.webp 300w, images/wedding-600.webp 600w, images/wedding.webp 900w"
+                  sizes="(max-width: 700px) calc(100vw - 4rem), 300px"
                   alt="Vintage-style wedding couple dancing illustration"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
             </div>

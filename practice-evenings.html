@@ -29,12 +29,8 @@
   />
   <meta name="twitter:image" content="https://ballroomwithcarole.co.uk/images/latin.webp" />
   <meta name="twitter:image:alt" content="Vintage-style Latin dance illustration" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
-    rel="stylesheet"
-  />
+  <link rel="preload" href="fonts/cormorant-garamond-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="style.css" />
   <script type="application/ld+json">
     {
@@ -157,7 +153,13 @@
 
         <div class="hero-art" aria-hidden="true">
           <div class="hero-art-frame">
-            <img src="images/latin.webp" alt="Vintage-style Latin dance illustration" />
+            <img
+              src="images/latin.webp"
+              srcset="images/latin-300.webp 300w, images/latin-600.webp 600w, images/latin.webp 900w"
+              sizes="(max-width: 920px) calc(100vw - 2rem), 40vw"
+              alt="Vintage-style ballroom dance illustration"
+              fetchpriority="high"
+            />
           </div>
         </div>
       </div>
