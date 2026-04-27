@@ -215,21 +215,11 @@
         <div class="section-heading">
           <div>
             <p class="eyebrow">Practice dates</p>
-            <h2 id="practice-dates-heading">April 2026 dates</h2>
           </div>
           <p class="price-tag">£5 per person</p>
         </div>
 
-        <div id="practice-dates-list" class="card-grid practice-dates-grid" aria-live="polite">
-          <article class="card practice-date-card" id="date-2026-04-08">
-            <h3>8th April</h3>
-            <p>Wednesday evening practice, 7:00 pm to 8:30 pm.</p>
-          </article>
-          <article class="card practice-date-card" id="date-2026-04-22">
-            <h3>22nd April</h3>
-            <p>Wednesday evening practice, 7:00 pm to 8:30 pm.</p>
-          </article>
-        </div>
+        <div id="practice-dates-list" aria-live="polite"></div>
       </div>
     </section>
 
@@ -275,7 +265,6 @@
     (function () {
       var rawData = window.practiceEveningsData;
       var months = Array.isArray(rawData) ? rawData : (rawData && rawData.monthLabel ? [rawData] : []);
-      var heading = document.getElementById("practice-dates-heading");
       var list = document.getElementById("practice-dates-list");
       var monthNumbers = {
         january: "01",
@@ -307,46 +296,38 @@
         return "date-" + (label || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
       }
 
-      if (heading && months.length) {
-        var headingText;
-        if (months.length === 1) {
-          headingText = months[0].monthLabel + " dates";
-        } else {
-          var yearMatch = (months[months.length - 1].monthLabel || "").match(/\d{4}/);
-          var year = yearMatch ? yearMatch[0] : "";
-          var monthNames = months.map(function (m) {
-            return (m.monthLabel || "").replace(/\s*\d{4}\s*/, "").trim();
-          });
-          headingText = monthNames.join(" & ") + (year ? " " + year : "") + " dates";
-        }
-        heading.textContent = headingText;
-      }
-
       if (!list) {
         return;
       }
 
-      var allDates = [];
-      months.forEach(function (m) {
-        var dates = Array.isArray(m.dates) ? m.dates : [];
-        dates.forEach(function (d) {
-          allDates.push({ label: d, monthLabel: m.monthLabel });
-        });
+      var hasDates = months.some(function (m) {
+        return Array.isArray(m.dates) && m.dates.length;
       });
 
-      if (!allDates.length) {
+      if (!hasDates) {
         list.innerHTML =
-          '<article class="card practice-date-card"><h3>Dates coming soon</h3><p>New practice evening dates will be announced soon.</p></article>';
+          '<article class="faq-item practice-date-item"><h3>Dates coming soon</h3><p>New practice evening dates will be announced soon.</p></article>';
         return;
       }
 
-      list.innerHTML = allDates
-        .map(function (item) {
+      list.innerHTML = months
+        .filter(function (m) { return Array.isArray(m.dates) && m.dates.length; })
+        .map(function (m) {
+          var cards = m.dates
+            .map(function (dateLabel) {
+              return (
+                '<article class="faq-item practice-date-item" id="' + slugifyDate(dateLabel, m.monthLabel) + '">' +
+                "<h3>" + dateLabel + "</h3>" +
+                "<p>Wednesday evening practice, 7:00 pm to 8:30 pm.</p>" +
+                "</article>"
+              );
+            })
+            .join("");
           return (
-            '<article class="card practice-date-card" id="' + slugifyDate(item.label, item.monthLabel) + '">' +
-            "<h3>" + item.label + "</h3>" +
-            "<p>Wednesday evening practice, 7:00 pm to 8:30 pm.</p>" +
-            "</article>"
+            '<div class="month-group">' +
+            "<h2>" + m.monthLabel + "</h2>" +
+            '<div class="faq-grid">' + cards + "</div>" +
+            "</div>"
           );
         })
         .join("");
