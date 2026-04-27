@@ -1,7 +1,12 @@
 window.practiceEveningsData = {
-  monthLabel: "April 2026",
+  monthLabel: "May 2026",
   dates: [
-    "8th April",
-    "22nd April"
+    "6th May",
+    "20th May"
+  ]
+  monthLabel: "June 2026",
+  dates: [
+    "10th June",
+    "24th June"
   ]
 };
