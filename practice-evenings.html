@@ -273,12 +273,10 @@
   <script src="practice-evenings-data.js"></script>
   <script>
     (function () {
-      var data = window.practiceEveningsData || {};
-      var monthLabel = data.monthLabel || "";
-      var dates = Array.isArray(data.dates) ? data.dates : [];
+      var rawData = window.practiceEveningsData;
+      var months = Array.isArray(rawData) ? rawData : (rawData && rawData.monthLabel ? [rawData] : []);
       var heading = document.getElementById("practice-dates-heading");
       var list = document.getElementById("practice-dates-list");
-      var currentMonth = monthLabel;
       var monthNumbers = {
         january: "01",
         february: "02",
@@ -294,9 +292,9 @@
         december: "12"
       };
 
-      function slugifyDate(label) {
+      function slugifyDate(label, monthLabel) {
         var labelMatch = (label || "").match(/(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]+)/);
-        var monthMatch = (currentMonth || "").match(/([A-Za-z]+)\s+(\d{4})/);
+        var monthMatch = (monthLabel || "").match(/([A-Za-z]+)\s+(\d{4})/);
         var day = labelMatch ? labelMatch[1].padStart(2, "0") : "";
         var monthName = labelMatch ? labelMatch[2].toLowerCase() : "";
         var year = monthMatch ? monthMatch[2] : "";
@@ -309,25 +307,44 @@
         return "date-" + (label || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
       }
 
-      if (heading && monthLabel) {
-        heading.textContent = monthLabel + " dates";
+      if (heading && months.length) {
+        var headingText;
+        if (months.length === 1) {
+          headingText = months[0].monthLabel + " dates";
+        } else {
+          var yearMatch = (months[months.length - 1].monthLabel || "").match(/\d{4}/);
+          var year = yearMatch ? yearMatch[0] : "";
+          var monthNames = months.map(function (m) {
+            return (m.monthLabel || "").replace(/\s*\d{4}\s*/, "").trim();
+          });
+          headingText = monthNames.join(" & ") + (year ? " " + year : "") + " dates";
+        }
+        heading.textContent = headingText;
       }
 
       if (!list) {
         return;
       }
 
-      if (!dates.length) {
+      var allDates = [];
+      months.forEach(function (m) {
+        var dates = Array.isArray(m.dates) ? m.dates : [];
+        dates.forEach(function (d) {
+          allDates.push({ label: d, monthLabel: m.monthLabel });
+        });
+      });
+
+      if (!allDates.length) {
         list.innerHTML =
           '<article class="card practice-date-card"><h3>Dates coming soon</h3><p>New practice evening dates will be announced soon.</p></article>';
         return;
       }
 
-      list.innerHTML = dates
-        .map(function (dateLabel) {
+      list.innerHTML = allDates
+        .map(function (item) {
           return (
-            '<article class="card practice-date-card" id="' + slugifyDate(dateLabel) + '">' +
-            "<h3>" + dateLabel + "</h3>" +
+            '<article class="card practice-date-card" id="' + slugifyDate(item.label, item.monthLabel) + '">' +
+            "<h3>" + item.label + "</h3>" +
             "<p>Wednesday evening practice, 7:00 pm to 8:30 pm.</p>" +
             "</article>"
           );
