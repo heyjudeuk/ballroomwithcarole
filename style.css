@@ -880,3 +880,282 @@ p {
     padding-bottom: 0 !important;
   }
 }
+
+/* ── Dance Game ─────────────────────────────────────────── */
+
+.game-hint {
+  margin: 1.25rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0.65;
+  text-align: center;
+}
+
+.pill {
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.game-hidden {
+  display: none !important;
+}
+
+.game-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(30, 20, 16, 0.6);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.game-modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 2rem;
+  box-shadow: 0 24px 60px rgba(46, 37, 33, 0.24);
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.game-streak-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.game-streak-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.game-streak-count {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+
+.game-close-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 0.85rem;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.game-close-btn:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.game-prompt-wrap {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.game-instruction {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+.game-style-prompt {
+  margin: 0.2rem 0;
+  font-family: var(--font-heading);
+  font-size: clamp(2.8rem, 10vw, 4.4rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+.style-ballroom {
+  color: #a07820;
+}
+
+.style-latin {
+  color: var(--accent);
+}
+
+.game-timer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.game-timer-track {
+  flex: 1;
+  height: 6px;
+  background: var(--surface-2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.game-timer-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--accent-dark), var(--accent));
+  transition: width 1s linear;
+}
+
+.game-timer-fill.timer-urgent {
+  background: #b83232;
+}
+
+.game-timer-text {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  min-width: 2.2rem;
+  text-align: right;
+}
+
+.game-dance-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+}
+
+.game-dance-btn {
+  padding: 0.85rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  text-align: center;
+}
+
+.game-dance-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(141, 75, 75, 0.35);
+  box-shadow: 0 6px 14px rgba(46, 37, 33, 0.08);
+}
+
+.game-dance-btn:disabled {
+  cursor: default;
+}
+
+.game-dance-btn.dance-correct {
+  background: rgba(34, 120, 34, 0.1);
+  border-color: rgba(34, 120, 34, 0.45);
+  color: #1e6b1e;
+}
+
+.game-dance-btn.dance-wrong {
+  background: rgba(184, 50, 50, 0.1);
+  border-color: rgba(184, 50, 50, 0.45);
+  color: #8b1a1a;
+  animation: shake 0.4s ease;
+}
+
+.game-dance-btn.dance-reveal {
+  background: rgba(34, 120, 34, 0.06);
+  border-color: rgba(34, 120, 34, 0.28);
+  color: #2d7a2d;
+  opacity: 0.72;
+}
+
+@keyframes shake {
+  0%,  100% { transform: translateX(0); }
+  20%        { transform: translateX(-6px); }
+  40%        { transform: translateX(6px); }
+  60%        { transform: translateX(-4px); }
+  80%        { transform: translateX(4px); }
+}
+
+.game-result {
+  text-align: center;
+  padding: 0.5rem 0 0.25rem;
+}
+
+.game-result-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.2rem, 6vw, 3rem);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+.game-result-msg {
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+
+.game-result-streak {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--accent-dark);
+  margin-bottom: 1.25rem;
+}
+
+.game-next-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+  padding: 0.82rem 2.25rem;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(180deg, #9a5656, #844545);
+  color: white;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(141, 75, 75, 0.2);
+  transition: transform 0.18s ease, background 0.18s ease;
+}
+
+.game-next-btn:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(180deg, #8f4e4e, #743c3c);
+}
+
+@media (max-width: 480px) {
+  .game-modal {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .game-dance-grid {
+    grid-template-columns: 1fr;
+  }
+}

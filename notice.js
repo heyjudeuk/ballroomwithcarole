@@ -6,7 +6,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 var notice = {
-  enabled: fales,
+  enabled: false,
   message: 'Classes are running as normal. See you on the floor!'
 };
 

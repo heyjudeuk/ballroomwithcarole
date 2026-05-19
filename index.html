@@ -249,6 +249,7 @@
           <span class="pill">Samba</span>
           <span class="pill">Paso Doble</span>
         </div>
+        <p class="game-hint">Tap any dance name to play a game</p>
       </div>
     </section>
 
@@ -425,6 +426,45 @@
   </main>
 
   <script src="notice.js"></script>
+
+  <div id="dance-game-modal" class="game-modal-backdrop game-hidden" role="dialog" aria-modal="true" aria-labelledby="game-style-prompt">
+    <div class="game-modal">
+      <div class="game-header">
+        <div class="game-streak-wrap">
+          <span class="game-streak-label">Streak</span>
+          <span id="game-streak-count" class="game-streak-count">0</span>
+        </div>
+        <button type="button" id="game-close-btn" class="game-close-btn" aria-label="Close game">&#x2715;</button>
+      </div>
+
+      <div id="game-play-area">
+        <div class="game-prompt-wrap">
+          <p class="game-instruction">Find all the</p>
+          <p id="game-style-prompt" class="game-style-prompt style-ballroom">BALLROOM</p>
+          <p class="game-instruction">dances</p>
+        </div>
+
+        <div class="game-timer">
+          <div class="game-timer-track">
+            <div id="game-timer-fill" class="game-timer-fill"></div>
+          </div>
+          <span id="game-timer-text" class="game-timer-text">10s</span>
+        </div>
+
+        <div id="game-dance-grid" class="game-dance-grid"></div>
+      </div>
+
+      <div id="game-result" class="game-result game-hidden">
+        <p id="game-result-title" class="game-result-title"></p>
+        <p id="game-result-msg" class="game-result-msg"></p>
+        <p id="game-result-streak" class="game-result-streak game-hidden"></p>
+        <button type="button" id="game-next-btn" class="game-next-btn">Play again</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+
   <footer class="site-footer">
     <div class="container footer-inner">
       <p>© Ballroom With Carole</p>
