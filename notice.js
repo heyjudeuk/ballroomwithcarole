@@ -6,8 +6,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 var notice = {
-  enabled: false,
-  message: 'Classes are running as normal. See you on the floor!'
+  enabled: true,
+  message: 'There are no classes on 15th June while Katie recovers. We are hoping to be back on the 22nd. Watch this space!'
 };
 
 // ─── Do not edit below this line ─────────────────────────────────────────────
