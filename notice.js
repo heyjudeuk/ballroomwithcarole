@@ -7,7 +7,7 @@
 
 var notice = {
   enabled: true,
-  message: 'There are no classes on 15th June while Katie recovers. We are hoping to be back on the 22nd. Watch this space!'
+  message: 'Classes resume on Monday 22nd June!'
 };
 
 // ─── Do not edit below this line ─────────────────────────────────────────────
