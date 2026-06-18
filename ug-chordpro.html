@@ -1,0 +1,289 @@
+<!-- Chord-over-lyrics to ChordPro converter -->
+<style>
+  :root {
+    --bc-gold: #c98a3a;
+    --bc-text: #2a2620;
+    --bc-text-light: #666;
+    --bc-bg: #ffffff;
+    --bc-tint: #fcfaf7;
+    --bc-border: #e0dcd0;
+    --font-serif: "Cormorant Garamond", Georgia, serif;
+    --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+    --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  .cp-wrap {
+    background: var(--bc-bg);
+    color: var(--bc-text);
+    padding: 40px 20px;
+    font-family: var(--font-sans);
+    max-width: 920px;
+    margin: 0 auto;
+  }
+
+  .cp-header {
+    margin-bottom: 24px;
+    border-bottom: 2px solid var(--bc-gold);
+    padding-bottom: 12px;
+  }
+
+  .cp-title {
+    font-family: var(--font-serif);
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--bc-text);
+  }
+
+  .cp-sub {
+    font-size: 1rem;
+    color: var(--bc-text-light);
+    line-height: 1.6;
+    margin: 12px 0 32px 0;
+  }
+
+  .cp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 720px) {
+    .cp-grid { grid-template-columns: 1fr; }
+  }
+
+  .cp-col label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--bc-gold);
+    margin-bottom: 8px;
+  }
+
+  .cp-textarea {
+    width: 100%;
+    height: 420px;
+    resize: vertical;
+    background: var(--bc-tint);
+    color: var(--bc-text);
+    border: 1px solid var(--bc-border);
+    border-radius: 4px;
+    padding: 16px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    white-space: pre;
+    overflow: auto;
+  }
+
+  .cp-textarea:focus { 
+    outline: 2px solid var(--bc-gold); 
+    outline-offset: -1px;
+    background: #fff;
+  }
+
+  #cp-output {
+    background: #fdfdfd;
+  }
+
+  .cp-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .cp-btn {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 2px solid var(--bc-gold);
+    border-radius: 0;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .cp-btn:active { transform: translateY(1px); }
+
+  .cp-btn-primary { background: var(--bc-gold); color: #fff; }
+  .cp-btn-primary:hover { background: #b07830; border-color: #b07830; }
+
+  .cp-btn-secondary { background: transparent; color: var(--bc-gold); }
+  .cp-btn-secondary:hover { background: var(--bc-gold); color: #fff; }
+
+  .cp-status {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #2e7d32;
+    margin-left: auto;
+  }
+
+  .cp-notes {
+    margin-top: 40px;
+    padding: 24px;
+    background: var(--bc-tint);
+    border-left: 4px solid var(--bc-gold);
+    font-size: 0.85rem;
+    color: var(--bc-text-light);
+    line-height: 1.7;
+  }
+  .cp-notes b { color: var(--bc-text); }
+</style>
+
+<div class="cp-wrap">
+  <div class="cp-header">
+    <div class="cp-title">Chord Line &rarr; ChordPro</div>
+  </div>
+  <p class="cp-sub">
+    Paste chords-above-lyrics text on the left (chords on their own line, the matching lyric line directly below). Click convert, and the ChordPro version appears on the right with chords moved inline as [Chord] tags.
+  </p>
+
+  <div class="cp-grid">
+    <div class="cp-col">
+      <label for="cp-input">Your text</label>
+      <textarea id="cp-input" class="cp-textarea" spellcheck="false"></textarea>
+    </div>
+    <div class="cp-col">
+      <label for="cp-output">ChordPro output</label>
+      <textarea id="cp-output" class="cp-textarea" spellcheck="false" readonly></textarea>
+    </div>
+  </div>
+
+  <div class="cp-actions">
+    <button class="cp-btn cp-btn-primary" id="cp-convert">Convert to ChordPro</button>
+    <button class="cp-btn cp-btn-secondary" id="cp-copy">Copy output</button>
+    <button class="cp-btn cp-btn-secondary" id="cp-example">Load example</button>
+    <span class="cp-status" id="cp-status"></span>
+  </div>
+
+  <div class="cp-notes">
+    <b>How it reads your text:</b> a line counts as a chord line if every token on it looks like a chord (root A&ndash;G, optional flat/sharp, optional 7/9/maj7/sus4/dim/m/etc, optional slash bass). If a chord line is followed by a lyric line, the chords get inserted into the lyric at the matching column. If a chord line stands alone (an instrumental bar), it&rsquo;s output as a line of bracketed chords. A whole line wrapped in single brackets, like [Verse 1] or [low C rumble], becomes a {comment: ...} line, unless the bracket only contains a single chord (like [C]) or a time signature (like [3/4]), which are left as ChordPro recognises them directly. Lines it isn&rsquo;t sure about are passed through unchanged, so it&rsquo;s worth a quick read over the output before you use it.
+  </div>
+</div>
+
+<script>
+(function () {
+  const chordToken = /^[A-G][#b]?(?:maj13|maj11|maj9|maj7|maj|min13|min11|min9|min7|min|m13|m11|m9|m7|m6|m|dim7|dim|aug|sus4|sus2|sus|add9|add11|6|7|9|11|13|5)?(?:b5|#5|#9|b9|#11|b13)?(?:\/[A-G][#b]?)?$/;
+  const timeSig = /^\d+\/\d+$/;
+
+  function tokensWithIndex(line) {
+    const out = [];
+    const re = /\S+/g;
+    let m;
+    while ((m = re.exec(line)) !== null) out.push({ text: m[0], index: m.index });
+    return out;
+  }
+
+  function isChordLine(line) {
+    const toks = tokensWithIndex(line);
+    if (toks.length === 0) return false;
+    return toks.every(t => chordToken.test(t.text));
+  }
+
+  function isBracketOnlyLine(line) {
+    const m = line.trim().match(/^\[(.+)\]$/);
+    return m ? m[1] : null;
+  }
+
+  function mergeChordLyric(chordLine, lyricLine) {
+    const toks = tokensWithIndex(chordLine).sort((a, b) => b.index - a.index);
+    let result = lyricLine;
+    for (const t of toks) {
+      let pos = t.index;
+      if (pos > result.length) result = result.padEnd(pos, " ");
+      result = result.slice(0, pos) + "[" + t.text + "]" + result.slice(pos);
+    }
+    return result.replace(/\s+$/, "");
+  }
+
+  function instrumentalLine(chordLine) {
+    return tokensWithIndex(chordLine).map(t => "[" + t.text + "]").join(" ");
+  }
+
+  function convert(text) {
+    const lines = text.replace(/\r\n/g, "\n").split("\n");
+    const out = [];
+    let i = 0;
+    while (i < lines.length) {
+      const line = lines[i];
+
+      const bracketInner = isBracketOnlyLine(line);
+      if (bracketInner !== null) {
+        if (chordToken.test(bracketInner) || timeSig.test(bracketInner)) {
+          out.push(line.trim());
+        } else {
+          out.push("{comment: " + bracketInner + "}");
+        }
+        i++;
+        continue;
+      }
+
+      if (line.trim() !== "" && isChordLine(line)) {
+        const next = i + 1 < lines.length ? lines[i + 1] : null;
+        const nextIsUsableLyric =
+          next !== null &&
+          next.trim() !== "" &&
+          isBracketOnlyLine(next) === null &&
+          !isChordLine(next);
+
+        if (nextIsUsableLyric) {
+          out.push(mergeChordLyric(line, next));
+          i += 2;
+        } else {
+          out.push(instrumentalLine(line));
+          i += 1;
+        }
+        continue;
+      }
+
+      out.push(line);
+      i++;
+    }
+    return out.join("\n");
+  }
+
+  const input = document.getElementById("cp-input");
+  const output = document.getElementById("cp-output");
+  const status = document.getElementById("cp-status");
+
+  document.getElementById("cp-convert").addEventListener("click", function () {
+    output.value = convert(input.value);
+    status.textContent = "Converted";
+    setTimeout(() => (status.textContent = ""), 1500);
+  });
+
+  document.getElementById("cp-copy").addEventListener("click", function () {
+    navigator.clipboard.writeText(output.value).then(function () {
+      status.textContent = "Copied";
+      setTimeout(() => (status.textContent = ""), 1500);
+    });
+  });
+
+  document.getElementById("cp-example").addEventListener("click", function () {
+    input.value =
+      "[Verse 1]\n" +
+      "G              D\n" +
+      "Example line of lyrics goes here\n" +
+      "Em             C\n" +
+      "And another one follows along\n" +
+      "\n" +
+      "[Chorus]\n" +
+      "C        G\n" +
+      "Some chorus words sit right here\n" +
+      "[3/4]\n" +
+      "Am       F\n" +
+      "Closing out the phrase\n" +
+      "\n" +
+      "[instrumental break]\n" +
+      "C Em7 F G\n" +
+      "\n" +
+      "[low C rumble]\n" +
+      "[C]";
+    output.value = "";
+  });
+})();
+</script>
