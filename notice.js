@@ -7,7 +7,7 @@
 
 var notice = {
   enabled: true,
-  message: 'Classes resume on Monday 22nd June!'
+  message: 'Dance practice cancelled for 24th June'
 };
 
 // ─── Do not edit below this line ─────────────────────────────────────────────

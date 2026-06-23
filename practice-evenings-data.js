@@ -10,7 +10,7 @@ window.practiceEveningsData = [
     monthLabel: "June 2026",
     dates: [
       "10th June",
-      "24th June"
+      "24th June - CANCELLED"
     ]
   }
 ];
